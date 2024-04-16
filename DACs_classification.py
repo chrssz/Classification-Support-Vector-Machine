@@ -6,6 +6,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt #to show distributions of classes.
 import seaborn as sns
+import category_encoders as ce
+from sklearn.model_selection import train_test_split
 #Step 2:
 # Load dataset and show basic statistics
 # 1. Show dataset size (dimensions)
@@ -17,7 +19,6 @@ for row in data: #column names are in 1st row of data
     print(row, end=', ')
 
 # 3. Show the distribution of the target class CES 4.0 Percentile Range column
-
 
 # Set figure size
 plt.figure(figsize=(12, 6))
@@ -40,7 +41,7 @@ plt.ylabel('Distribution Percentage')
 # Show the plots
 plt.tight_layout()
 plt.show()
-
+print()
 # Step 3:
 #Clean the dataset - you can eitherhandle the missing values in the dataset
 # with the mean of the columns attributes or remove rows the have missing values.
@@ -50,6 +51,17 @@ clean_data = data.dropna() #drop rows with null values
 # Step 4: 
 #Encode the Categorical Variables - Using OrdinalEncoder from the category_encoders library to encode categorical variables as ordinal integers
 
+# Define categorical columns to be encoded
+categorical_cols = [col for col in data if col != 'CES 4.0 Percentile Range']  # append all cols in list except target variable column
+
+# Initialize OrdinalEncoder
+encoder = ce.OrdinalEncoder(cols=categorical_cols)
+
+# Fit and transform the encoder on the cleaned dataset
+encoded_data = encoder.fit_transform(clean_data)
+
+# Check the encoded dataset
+print(encoded_data.head())
 
 # Step 5: 
 # Separate predictor variables from the target variable (attributes (X) and target variable (y) as we did in the class)
@@ -57,23 +69,42 @@ clean_data = data.dropna() #drop rows with null values
 # Use stratifying (stratify=y) to ensure class balance in train/test splits
 # Name them as X_train, X_test, y_train, and y_test
 # Name them as X_train, X_test, y_train, and y_test
+
 X_train = [] # Remove this line after implementing train test split
 X_test = [] # Remove this line after implementing train test split
 
+# Separate predictor variables (X) from the target variable (y)
+X = encoded_data.drop(columns=['CES 4.0 Percentile Range'])  #target variauble
+y = encoded_data['CES 4.0 Percentile Range']
+
+# Create train and test splits with stratification
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+# Check the shape of the splits
+print("Shape of X_train:", X_train.shape)
+print("Shape of X_test:", X_test.shape)
+print("Shape of y_train:", y_train.shape)
+print("Shape of y_test:", y_test.shape)
 
 # Do not do steps 6 - 8 for the Ramdom Forest Model
 # Step 6:
 # Standardize the features (Import StandardScaler here)
+from sklearn.preprocessing import StandardScaler
+# Initialize StandardScaler
+scaler = StandardScaler()
 
+# Fit and transform the scaler on the training set
+X_train_scaled = scaler.fit_transform(X_train)
 
+# Transform the test set using the scaler fitted on the training set
+X_test_scaled = scaler.transform(X_test)
 
 # Step 7:
 # Below is the code to convert X_train and X_test into data frames for the next steps
-'''
+
 cols = X_train.columns
-X_train = pd.DataFrame(X_train, columns=[cols]) # pd is the imported pandas lirary - Import pandas as pd
-X_test = pd.DataFrame(X_test, columns=[cols]) # pd is the imported pandas lirary - Import pandas as pd
-'''
+X_train = pd.DataFrame(X_train_scaled, columns=[cols]) # pd is the imported pandas lirary - Import pandas as pd
+X_test = pd.DataFrame(X_test_scaled, columns=[cols]) # pd is the imported pandas lirary - Import pandas as pd
 
 
 # Step 8 - Build and train the SVM classifier
