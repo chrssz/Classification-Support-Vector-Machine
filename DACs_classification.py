@@ -1,6 +1,6 @@
 #Step 1:
 # Import libraries
-# In this section, you can use a search engine to look for the functions that will help you implement the following steps
+
 import sklearn as sk
 import pandas as pd
 import numpy as np
@@ -8,15 +8,21 @@ import matplotlib.pyplot as plt #to show distributions of classes.
 import seaborn as sns
 import category_encoders as ce
 from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+# In this section, you can use a search engine to look for the functions that will help you implement the following steps
+# Set the option to opt-in to future behavior and silence a warning about future.no_silent dowcasting displaying on console
+pd.set_option('future.no_silent_downcasting', True)
+
 #Step 2:
 # Load dataset and show basic statistics
 # 1. Show dataset size (dimensions)
 data = pd.read_csv('disadvantaged_communities.csv')
+print(f"Dataset Dimensions: {data.shape}")
 # 2. Show what column names exist for the 49 attributes in the dataset
 #prints all columns in dataset
 print("Column Names: ", end='')
-for row in data: #column names are in 1st row of data
-    print(row, end=', ')
+for col in data: #column names are in 1st row of data
+    print(col, end=', ')
 
 # 3. Show the distribution of the target class CES 4.0 Percentile Range column
 
@@ -74,11 +80,11 @@ X_train = [] # Remove this line after implementing train test split
 X_test = [] # Remove this line after implementing train test split
 
 # Separate predictor variables (X) from the target variable (y)
-X = encoded_data.drop(columns=['CES 4.0 Percentile Range'])  #target variauble
+X = encoded_data.drop(columns=['CES 4.0 Percentile Range'])  #target variable
 y = encoded_data['CES 4.0 Percentile Range']
 
 # Create train and test splits with stratification
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
 
 # Check the shape of the splits
 print("Shape of X_train:", X_train.shape)
@@ -103,8 +109,8 @@ X_test_scaled = scaler.transform(X_test)
 # Below is the code to convert X_train and X_test into data frames for the next steps
 
 cols = X_train.columns
-X_train = pd.DataFrame(X_train_scaled, columns=[cols]) # pd is the imported pandas lirary - Import pandas as pd
-X_test = pd.DataFrame(X_test_scaled, columns=[cols]) # pd is the imported pandas lirary - Import pandas as pd
+X_train = pd.DataFrame(X_train_scaled, columns=cols) # pd is the imported pandas lirary - Import pandas as pd
+X_test = pd.DataFrame(X_test_scaled, columns=cols) # pd is the imported pandas lirary - Import pandas as pd
 
 
 # Step 8 - Build and train the SVM classifier
@@ -113,13 +119,14 @@ X_test = pd.DataFrame(X_test_scaled, columns=[cols]) # pd is the imported pandas
    #    2. C=10.0 (Higher value of C means fewer outliers)
    #    3. gamma = 0.3 (Linear)
 
-
+svm_classifier = SVC(kernel='rbf',C = 10.0, gamma=0.3)
+#Train classifier on training data
+svm_classifier.fit(X_train_scaled, y_train)
 
 # Test the above developed SVC on unseen pulsar dataset samples
-
 # compute and print accuracy score
-
-
+accuracy = svm_classifier.score(X_test_scaled,y_test)
+print(f"Accuracy of SVM classifier on test data: {accuracy * 100}%")
 
 # Save your SVC model (whatever name you have given your model) as .sav to upload with your submission
 # You can use the library pickle to save and load your model for this assignment
