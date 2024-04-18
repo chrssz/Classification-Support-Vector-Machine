@@ -9,6 +9,8 @@ import seaborn as sns
 import category_encoders as ce
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from joblib import dump #to save models as .sav
 # In this section, you can use a search engine to look for the functions that will help you implement the following steps
 # Set the option to opt-in to future behavior and silence a warning about future.no_silent dowcasting displaying on console
 pd.set_option('future.no_silent_downcasting', True)
@@ -119,7 +121,7 @@ X_test = pd.DataFrame(X_test_scaled, columns=cols) # pd is the imported pandas l
    #    2. C=10.0 (Higher value of C means fewer outliers)
    #    3. gamma = 0.3 (Linear)
 
-svm_classifier = SVC(kernel='rbf',C = 10.0, gamma=0.3)
+svm_classifier = SVC(kernel='rbf',C = 10.0, gamma=0.003)
 #Train classifier on training data
 svm_classifier.fit(X_train_scaled, y_train)
 
@@ -129,14 +131,15 @@ accuracy = svm_classifier.score(X_test_scaled,y_test)
 print(f"Accuracy of SVM classifier on test data: {accuracy * 100}%")
 
 # Save your SVC model (whatever name you have given your model) as .sav to upload with your submission
+dump(svm_classifier, 'svm_classifier.sav')
 # You can use the library pickle to save and load your model for this assignment
 
 
 
-
+'''
 # Optional: You can print test results of your model here if you want. Otherwise implement them in evaluation.py file
 # Get and print confusion matrix
-'''
+
 cm = [[]]
 # Below are the metrics for computing classification accuracy, precision, recall and specificity
 TP = cm[0,0]
@@ -156,23 +159,23 @@ print('Recall or Sensitivity : {0:0.3f}'.format(recall))
 # Compute Specificity and use the following line to print it
 specificity = 0 # Change this line to implement Specificity formula
 print('Specificity : {0:0.3f}'.format(specificity))
-
-
-
-
+'''
 
 
 # Step 9: Build and train the Random Forest classifier
 # Train Random Forest  with the following parameters.
 # (n_estimators=10, random_state=0)
-
+rf_classifier = RandomForestClassifier(n_estimators=10, random_state=0)
 # Test the above developed Random Forest model on unseen DACs dataset samples
-
+rf_classifier.fit(X_train_scaled, y_train)
 # compute and print accuracy score
-
+accuracy_rf = rf_classifier.score(X_test_scaled, y_test)
+print(f"Accuracy of Random Forest classifier on test data: {accuracy_rf * 100}%")
 # Save your Random Forest model (whatever name you have given your model) as .sav to upload with your submission
+dump(rf_classifier, 'rf_classifier.sav')
 # You can use the library pickle to save and load your model for this assignment
 
+'''
 # Optional: You can print test results of your model here if you want. Otherwise implement them in evaluation.py file
 # Get and print confusion matrix
 cm = [[]]

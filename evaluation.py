@@ -22,3 +22,30 @@ TP = cm[0,0]
 TN = cm[1,1]
 FP = cm[0,1]
 FN = cm[1,0]
+
+
+'''
+do for both random_forest and svm
+# Optional: You can print test results of your model here if you want. Otherwise implement them in evaluation.py file
+# Get and print confusion matrix
+
+cm = [[]]
+# Below are the metrics for computing classification accuracy, precision, recall and specificity
+TP = cm[0,0]
+TN = cm[1,1]
+FP = cm[0,1]
+FN = cm[1,0]
+
+# Compute Precision and use the following line to print it
+precision = 0 # Change this line to implement Precision formula
+print('Precision : {0:0.3f}'.format(precision))
+
+
+# Compute Recall and use the following line to print it
+recall = 0 # Change this line to implement Recall formula
+print('Recall or Sensitivity : {0:0.3f}'.format(recall))
+
+# Compute Specificity and use the following line to print it
+specificity = 0 # Change this line to implement Specificity formula
+print('Specificity : {0:0.3f}'.format(specificity))
+'''
