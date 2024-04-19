@@ -68,8 +68,7 @@ encoder = ce.OrdinalEncoder(cols=categorical_cols)
 # Fit and transform the encoder on the cleaned dataset
 encoded_data = encoder.fit_transform(clean_data)
 
-# Check the encoded dataset
-print(encoded_data.head())
+
 
 # Step 5: 
 # Separate predictor variables from the target variable (attributes (X) and target variable (y) as we did in the class)
@@ -87,7 +86,7 @@ y = encoded_data['CES 4.0 Percentile Range']
 
 # Create train and test splits with stratification
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
-
+X_rf_train, X_rf_test, y_rf_train, y_rf_test = X_train, X_test, y_train, y_test
 # Check the shape of the splits
 print("Shape of X_train:", X_train.shape)
 print("Shape of X_test:", X_test.shape)
@@ -121,7 +120,7 @@ X_test = pd.DataFrame(X_test_scaled, columns=cols) # pd is the imported pandas l
    #    2. C=10.0 (Higher value of C means fewer outliers)
    #    3. gamma = 0.3 (Linear)
 
-svm_classifier = SVC(kernel='rbf',C = 10.0, gamma=0.003)
+svm_classifier = SVC(kernel='linear',C = 10.0, gamma=0.3)
 #Train classifier on training data
 svm_classifier.fit(X_train_scaled, y_train)
 
@@ -136,40 +135,19 @@ dump(svm_classifier, 'svm_classifier.sav')
 
 
 
-'''
-# Optional: You can print test results of your model here if you want. Otherwise implement them in evaluation.py file
-# Get and print confusion matrix
 
-cm = [[]]
-# Below are the metrics for computing classification accuracy, precision, recall and specificity
-TP = cm[0,0]
-TN = cm[1,1]
-FP = cm[0,1]
-FN = cm[1,0]
-
-# Compute Precision and use the following line to print it
-precision = 0 # Change this line to implement Precision formula
-print('Precision : {0:0.3f}'.format(precision))
-
-
-# Compute Recall and use the following line to print it
-recall = 0 # Change this line to implement Recall formula
-print('Recall or Sensitivity : {0:0.3f}'.format(recall))
-
-# Compute Specificity and use the following line to print it
-specificity = 0 # Change this line to implement Specificity formula
-print('Specificity : {0:0.3f}'.format(specificity))
-'''
 
 
 # Step 9: Build and train the Random Forest classifier
 # Train Random Forest  with the following parameters.
 # (n_estimators=10, random_state=0)
+# Test the above developed Random Forest model on unseen DACs dataset samples
+
 rf_classifier = RandomForestClassifier(n_estimators=10, random_state=0)
 # Test the above developed Random Forest model on unseen DACs dataset samples
-rf_classifier.fit(X_train_scaled, y_train)
+rf_classifier.fit(X_rf_train, y_rf_train) 
 # compute and print accuracy score
-accuracy_rf = rf_classifier.score(X_test_scaled, y_test)
+accuracy_rf = rf_classifier.score(X_rf_test, y_rf_test)
 print(f"Accuracy of Random Forest classifier on test data: {accuracy_rf * 100}%")
 # Save your Random Forest model (whatever name you have given your model) as .sav to upload with your submission
 dump(rf_classifier, 'rf_classifier.sav')
