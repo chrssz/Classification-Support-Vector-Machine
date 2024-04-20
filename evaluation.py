@@ -49,9 +49,9 @@ rf_predict = rf.predict(X_test)  # Random Forest prediction
 # Compute Confusion Matrix for SVM
 svm_cm = confusion_matrix(y_test, svm_predict)
 svm_accuracy = accuracy_score(y_test, svm_predict)
-# Compute Precision Score for SVM (average='micro' to compute precision for each class)
+# Compute Precision Score for SVM 
 svm_precision = precision_score(y_test, svm_predict, average='weighted')
-# Compute recall Score for SVM (average='micro' to compute recall for each class)
+# Compute recall Score for SVM 
 svm_recall = recall_score(y_test, svm_predict, average='weighted')
 svm_specificity = svm_cm[0, 0] / (svm_cm[0, 0] + svm_cm[0, 1])
 
@@ -59,9 +59,9 @@ svm_specificity = svm_cm[0, 0] / (svm_cm[0, 0] + svm_cm[0, 1])
 # Compute confusion Matrix for SVM
 rf_cm = confusion_matrix(y_test, rf_predict)
 rf_accuracy = accuracy_score(y_test, rf_predict)
-# Compute Precision Score for RF (average='micro' to compute precision for each class)
+# Compute Precision Score for RF 
 rf_precision = precision_score(y_test, rf_predict, average='weighted')
-# Compute recall Score for RF (average='micro' to compute recall for each class)
+# Compute recall Score for RF 
 rf_recall = recall_score(y_test, rf_predict, average='weighted')
 rf_specificity = rf_cm[0, 0] / (rf_cm[0, 0] + rf_cm[0, 1])
 

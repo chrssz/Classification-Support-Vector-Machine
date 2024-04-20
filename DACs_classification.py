@@ -19,16 +19,22 @@ pd.set_option('future.no_silent_downcasting', True)
 # Load dataset and show basic statistics
 # 1. Show dataset size (dimensions)
 data = pd.read_csv('disadvantaged_communities.csv')
+print("------------Start of Dataset Dimension---------")
 print(f"Dataset Dimensions: {data.shape}")
+print("------------End of Dataset Dimension---------")
+print()
 # 2. Show what column names exist for the 49 attributes in the dataset
 #prints all columns in dataset
+print("------------Start Column Names---------")
 print("Column Names: ", end='')
 for col in data: #column names are in 1st row of data
     print(col, end=', ')
-
+    print()
+print("----------End of Column Names---------")
 # 3. Show the distribution of the target class CES 4.0 Percentile Range column
-
+print()
 # Set figure size
+print("------------Start of distribution Figure----------")
 plt.figure(figsize=(12, 6))
 
 plt.subplot(1, 2, 1)
@@ -49,6 +55,7 @@ plt.ylabel('Distribution Percentage')
 # Show the plots
 plt.tight_layout()
 plt.show()
+print("------------End of distribution Figure----------")
 print()
 # Step 3:
 #Clean the dataset - you can eitherhandle the missing values in the dataset
@@ -88,11 +95,13 @@ y = encoded_data['CES 4.0 Percentile Range']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
 X_rf_train, X_rf_test, y_rf_train, y_rf_test = X_train, X_test, y_train, y_test
 # Check the shape of the splits
+print("---------Start of shape Splits---------")
 print("Shape of X_train:", X_train.shape)
 print("Shape of X_test:", X_test.shape)
 print("Shape of y_train:", y_train.shape)
 print("Shape of y_test:", y_test.shape)
-
+print("---------End of shape Splits---------")
+print()
 # Do not do steps 6 - 8 for the Ramdom Forest Model
 # Step 6:
 # Standardize the features (Import StandardScaler here)
@@ -126,17 +135,13 @@ svm_classifier.fit(X_train_scaled, y_train)
 
 # Test the above developed SVC on unseen pulsar dataset samples
 # compute and print accuracy score
+print("---------Start of Accuracy Scores---------")
 accuracy = svm_classifier.score(X_test_scaled,y_test)
 print(f"Accuracy of SVM classifier on test data: {accuracy * 100}%")
 
 # Save your SVC model (whatever name you have given your model) as .sav to upload with your submission
 dump(svm_classifier, 'svm_classifier.sav')
 # You can use the library pickle to save and load your model for this assignment
-
-
-
-
-
 
 # Step 9: Build and train the Random Forest classifier
 # Train Random Forest  with the following parameters.
@@ -149,37 +154,9 @@ rf_classifier.fit(X_rf_train, y_rf_train)
 # compute and print accuracy score
 accuracy_rf = rf_classifier.score(X_rf_test, y_rf_test)
 print(f"Accuracy of Random Forest classifier on test data: {accuracy_rf * 100}%")
+
+print("---------End of Accuracy Scores---------")
 # Save your Random Forest model (whatever name you have given your model) as .sav to upload with your submission
 dump(rf_classifier, 'rf_classifier.sav')
 # You can use the library pickle to save and load your model for this assignment
 
-'''
-# Optional: You can print test results of your model here if you want. Otherwise implement them in evaluation.py file
-# Get and print confusion matrix
-cm = [[]]
-# Below are the metrics for computing classification accuracy, precision, recall and specificity
-TP = cm[0,0]
-TN = cm[1,1]
-FP = cm[0,1]
-FN = cm[1,0]
-
-
-# Compute Classification Accuracy and use the following line to print it
-classification_accuracy = 0
-print('Classification accuracy : {0:0.4f}'.format(classification_accuracy))
-
-# Compute Precision and use the following line to print it
-precision = 0 # Change this line to implement Precision formula
-print('Precision : {0:0.3f}'.format(precision))
-
-
-# Compute Recall and use the following line to print it
-recall = 0 # Change this line to implement Recall formula
-print('Recall or Sensitivity : {0:0.3f}'.format(recall))
-
-# Compute Specificity and use the following line to print it
-specificity = 0 # Change this line to implement Specificity formula
-print('Specificity : {0:0.3f}'.format(specificity))
-
-
-'''
